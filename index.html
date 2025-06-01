@@ -1,24 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Hello World</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: #ffffff;
-      font-family: sans-serif;
-      text-align: center;
-      padding-top: 100px;
-    }
-    h1 {
-      font-size: 3em;
-      color: #00bfff;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CheapTools.shop - All-in-One Online Tools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <p>Welcome to my first HTML page.</p>
+<header>
+  <h1>CheapTools.shop</h1>
+
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <nav id="navMenu">
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="contact.html">Contact</a>
+    <a href="themes.html">Themes</a>
+  </nav>
+</header>
+
+  <section class="hero">
+    <h2>Welcome to CheapTools.shop</h2>
+    <p id="hero-subtext">Your one-stop shop for simple, powerful online tools</p>
+
+  </section>
+<div class="search-container" style="text-align: center; margin-top: 1.5rem;">
+  <input type="text" id="searchInput" placeholder="Search tools..." onkeyup="filterTools()" style="padding: 0.75rem 1rem; border-radius: 8px; width: 400px; border: none;">
+</div>
+
+  <section class="tools-grid">
+        <!-- START OF TOOL CARDS -->
+    <a href="merge-pdf.html" class="tool-card">
+  <h2>Merge PDF</h2>
+  <p>Combine PDFs in the order you want with the easiest PDF merger available.</p>
+</a>
+
+    <a href="split-pdf.html" class="tool-card">
+      <h2>Split PDF</h2>
+      <p>Separate one page or a whole set for easy conversion into independent PDF files.</p>
+</a>
+
+    <a href="compress-pdf.html" class="tool-card">
+      <h2>Compress PDF</h2>
+      <p>Reduce file size while optimizing for maximal PDF quality.</p>
+</a>
+
+    <a href="pdf-to-word.html" class="tool-card">
+      <h2>PDF to Word</h2>
+      <p>Easily convert your PDF files into easy to edit DOC and DOCX documents. The converted WORD document is almost 100% accurate.</p>
+      </a>
+
+    <a href="pdf-to-powerpoint.html" class="tool-card">
+      <h2>PDF to PowerPoint</h2>
+      <p>Turn your PDF files into easy to edit PPT and PPTX slideshows.</p>
+      </a>
+
+    <a href="pdf-to-excel.html" class="tool-card">
+      <h2>PDF to Excel</h2>
+      <p>Pull data straight from PDFs into Excel spreadsheets in a few short seconds.</p>
+      </a>
+
+    <a href="word-to-pdf.html" class="tool-card">
+      <h2>Word to PDF</h2>
+      <p>Make DOC and DOCX files easy to read by converting them to PDF.</p>
+      </a>
+
+    <a href="powerpoint-to-pdf.html" class="tool-card">
+      <h2>PowerPoint to PDF</h2>
+      <p>Make PPT and PPTX slideshows easy to view by converting them to PDF.</p>
+      </a>
+
+    <a href="execl-to-pdf.html" class="tool-card">
+      <h2>Excel to PDF</h2>
+      <p>Make EXCEL spreadsheets easy to read by converting them to PDF.</p>
+      </a>
+    
+    <a href="edit-pdf.html" class="tool-card">
+      <h2>Edit PDF</h2>
+      <p>Add text, images, shapes or freehand annotations to a PDF document. Edit the size, font, and color of the added content.</p>
+      </a>
+      
+    <a href="pdf-to-jpg.html" class="tool-card">
+      <h2>PDF to JPG</h2>
+      <p>Convert each PDF page into a JPG or extract all images contained in a PDF.</p>
+      </a>
+
+    <a href="jpg-to-pdf.html" class="tool-card">
+      <h2>JPG to PDF</h2>
+      <p>Convert JPG images to PDF in seconds. Easily adjust orientation and margins.</p>
+    </a>
+    
+    <a href="sign-pdf.html" class="tool-card">
+      <h2>Sign PDF</h2>
+      <p>Sign yourself or request electronic signatures from others.</p>
+      </a>
+
+    <a href="watermark-pdf.html" class="tool-card">
+      <h2>Watermark</h2>
+      <p>Stamp an image or text over your PDF in seconds. Choose the typography, transparency and position.</p>
+      </a>
+
+    <a href="rotate-pdf.html" class="tool-card">
+      <h2>Rotate PDF</h2>
+      <p>Rotate your PDFs the way you need them. You can even rotate multiple PDFs at once!</p>
+      </a>
+
+    <a href="html-to-pdf.html" class="tool-card">
+      <h2>HTML to PDF</h2>
+      <p>Convert webpages in HTML to PDF. Copy and paste the URL of the page you want and convert it to PDF with a click.</p>
+      </a>
+
+
+    <a href="unlock-pdf.html" class="tool-card">
+      <h2>Unlock PDF</h2>
+      <p>Remove PDF password security, giving you the freedom to use your PDFs as you want.</p>
+      </a>
+
+    <a href="protact-pdf.html" class="tool-card">
+      <h2>Protect PDF</h2>
+      <p>Protect PDF files with a password. Encrypt PDF documents to prevent unauthorized access.</p>
+      </a>
+
+    <a href="organise-pdf.html" class="tool-card">
+      <h2>Organize PDF</h2>
+      <p>Sort pages of your PDF file however you like. Delete PDF pages or add PDF pages to your document at your convenience.</p>
+      </a>
+
+
+    <a href="pdf-to-pdfa.html" class="tool-card">
+      <h2>PDF to PDF/A</h2>
+      <p>Transform your PDF to PDF/A, the ISO-standardized version of PDF for long-term archiving. Your PDF will preserve formatting when accessed in the future.</p>
+    </a>
+
+    <a href="repare-pdf.html" class="tool-card">
+      <h2>Repair PDF</h2>
+      <p>Repair a damaged PDF and recover data from corrupt PDF. Fix PDF files with our Repair tool.</p>
+      </a>
+    
+    <a href="page-numbers.html" class="tool-card">
+      <h2>Page Numbers</h2>
+      <p>Add page numbers into PDFs with ease. Choose your positions, dimensions, typography.</p>
+      </a>
+
+    <a href="scan-to-pdf.html" class="tool-card">
+      <h2>Scan to PDF</h2>
+      <p>Capture document scans from your mobile device and send them instantly to your browser.</p>
+    </a>
+
+    <a href="ocr-pdf.html" class="tool-card">
+      <h2>OCR PDF</h2>
+      <p>Easily convert scanned PDF into searchable and selectable documents.</p>
+      </a>
+    
+    <a href="compare-pdf.html" class="tool-card">
+      <h2>Compare PDF</h2>
+      <p>Show a side-by-side document comparison and easily spot changes between different file versions.</p>
+      </a>
+    
+    <a href="redact-pdf.html" class="tool-card">
+      <h2>Redact PDF</h2>
+      <p>Redact text and graphics to permanently remove sensitive information from a PDF.</p>
+      </a>
+    
+    <a href="crop-pdf.html" class="tool-card">
+      <h2>Crop PDF</h2>
+      <p>Crop margins of PDF documents or select specific areas, then apply the changes to one page or the whole document.</p>
+      </a>
+
+    <!-- END OF TOOL CARDS -->
+  </section>
+    <footer>
+  <p>&copy; 2025 CheapTools.shop — All rights reserved.</p>
+  <p>📞 <strong>Mobile:</strong> <a href="tel:8890079030" style="color:#00e676;">8890079030</a></p>
+  <p>📧 <strong>Email:</strong> <a href="mailto:shyamsundergour8503933142@gmail.com" style="color:#00e676;">shyamsundergour8503933142@gmail.com</a></p>
+  <div style="margin-top: 1rem;">
+    <div style="display: flex; justify-content: center;">
+  <a href="#" aria-label="Facebook" style="margin: 0 8px; color: #ffffff; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🔵</a>
+  <a href="#" aria-label="Twitter" style="margin: 0 8px; color: #ffffff; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🐦</a>
+  <a href="#" aria-label="LinkedIn" style="margin: 0 8px; color: #ffffff; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">💼</a>
+  <a href="#" aria-label="Instagram" style="margin: 0 8px; color: #ffffff; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">📸</a>
+</div>
+  </div>
+</footer>
+<script src="script.js"></script>
 </body>
 </html>
