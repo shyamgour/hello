@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel to PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .note {
+      color: #bbbbbb;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Excel to PDF</h2>
+    <p>Convert your Excel spreadsheet (.xls, .xlsx) into a PDF file.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+    <br />
+    <button class="button" onclick="alert('Excel to PDF conversion requires server-side support and is not available fully client-side.')">Convert</button>
+    <p class="note">Note: Excel to PDF conversion needs API or software support. This feature will be added in future versions.</p>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 CheapTools.shop — All rights reserved.</p>
+  </footer>
+</body>
+</html>

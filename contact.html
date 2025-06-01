@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input, textarea {
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00c665;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Contact Us</h2>
+    <p>We’d love to hear from you. Please fill out the form below.</p>
+  </section>
+
+  <form action="https://formsubmit.co/shyamsundergour8503933142@gmail.com" method="POST">
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+    <button type="submit">Send Message</button>
+    <input type="hidden" name="_subject" value="Message from CheapTools.shop">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="https://cheaptools.shop/thank-you.html">
+  </form>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+</body>
+</html>

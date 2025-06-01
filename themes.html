@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Theme - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary-color: #00e676;
+      --background-color: #121212;
+      --text-color: #ffffff;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header, footer {
+      background-color: #1f1f1f;
+      padding: 1rem 2rem;
+    }
+
+    .theme-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .theme-button {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .theme-1 { background: #00e676; color: #121212; }
+    .theme-2 { background: #2196f3; color: #ffffff; }
+    .theme-3 { background: #ff5722; color: #ffffff; }
+    .theme-4 { background: #9c27b0; color: #ffffff; }
+    .theme-5 { background: #ffeb3b; color: #121212; }
+    .theme-6 { background: #ffffff; color: #000000; }
+    .save-button {
+      margin-top: 2rem;
+      background: var(--primary-color);
+      color: var(--background-color);
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">Back to Home</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Select Your Theme</h2>
+    <p>Choose a color theme that suits your style!</p>
+  </section>
+
+  <div class="theme-list">
+    <button class="theme-button theme-1" onclick="setTheme('#00e676', '#121212', '#ffffff')">Green / Dark</button>
+    <button class="theme-button theme-2" onclick="setTheme('#2196f3', '#0d1117', '#ffffff')">Blue / Midnight</button>
+    <button class="theme-button theme-3" onclick="setTheme('#ff5722', '#212121', '#ffffff')">Orange / Gray</button>
+    <button class="theme-button theme-4" onclick="setTheme('#9c27b0', '#1a1a1a', '#ffffff')">Purple / Black</button>
+    <button class="theme-button theme-5" onclick="setTheme('#ffeb3b', '#121212', '#000000')">Yellow / Dark</button>
+    <button class="theme-button theme-6" onclick="setTheme('#ffffff', '#ACACAC', '#E9ECEE')">Gray / White</button>
+  </div>
+
+  <button class="save-button" onclick="saveTheme()">Save Theme</button>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    function setTheme(primary, background, text) {
+      document.documentElement.style.setProperty('--primary-color', primary);
+      document.documentElement.style.setProperty('--background-color', background);
+      document.documentElement.style.setProperty('--text-color', text);
+    }
+
+    function saveTheme() {
+      const styles = getComputedStyle(document.documentElement);
+      localStorage.setItem('theme', JSON.stringify({
+        primary: styles.getPropertyValue('--primary-color').trim(),
+        background: styles.getPropertyValue('--background-color').trim(),
+        text: styles.getPropertyValue('--text-color').trim()
+      }));
+      alert('Theme saved! It will apply next time you visit.');
+    }
+
+    // Load saved theme on start
+    window.onload = () => {
+      const theme = JSON.parse(localStorage.getItem('theme'));
+      if (theme) setTheme(theme.primary, theme.background, theme.text);
+    };
+  </script>
+</body>
+</html>

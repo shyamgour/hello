@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crop PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    canvas {
+      margin-top: 1rem;
+      border: 1px solid #444;
+      max-width: 100%;
+    }
+    input[type="file"] {
+      margin: 0.5rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Crop PDF</h2>
+    <p>Select the area of the first PDF page you want to keep, and download it cropped.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <br>
+    <canvas id="pdfCanvas"></canvas>
+    <br>
+    <button class="button" onclick="cropPDF()">Crop and Download</button>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    let canvas = document.getElementById("pdfCanvas");
+    let ctx = canvas.getContext("2d");
+    let startX, startY, endX, endY, isSelecting = false;
+
+    canvas.addEventListener("mousedown", e => {
+      isSelecting = true;
+      startX = e.offsetX;
+      startY = e.offsetY;
+    });
+
+    canvas.addEventListener("mouseup", e => {
+      isSelecting = false;
+      endX = e.offsetX;
+      endY = e.offsetY;
+      ctx.strokeStyle = "#00e676";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(startX, startY, endX - startX, endY - startY);
+    });
+
+    async function loadPDFCanvas() {
+      const input = document.getElementById("pdfFile");
+      if (!input.files.length) return alert("Please select a PDF.");
+
+      const buffer = await input.files[0].arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 2 });
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: ctx, viewport }).promise;
+    }
+
+    document.getElementById("pdfFile").addEventListener("change", loadPDFCanvas);
+
+    async function cropPDF() {
+      if (startX === undefined || endX === undefined) return alert("Please select a crop area first.");
+
+      const pdfDoc = await PDFLib.PDFDocument.create();
+      const jpgImage = await PDFLib.PDFDocument.create();
+      const imgBytes = canvas.toDataURL("image/jpeg");
+      const embeddedImg = await pdfDoc.embedJpg(imgBytes);
+
+      const cropX = Math.min(startX, endX);
+      const cropY = canvas.height - Math.max(startY, endY);
+      const cropW = Math.abs(endX - startX);
+      const cropH = Math.abs(endY - startY);
+
+      const page = pdfDoc.addPage([cropW, cropH]);
+      page.drawImage(embeddedImg, {
+        x: -cropX,
+        y: -cropY,
+        width: canvas.width,
+        height: canvas.height
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "cropped.pdf";
+      link.click();
+    }
+  </script>
+</body>
+</html>

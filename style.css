@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* THEME VARIABLES */
+:root {
+  --primary-color: #00e676;
+  --background-color: #121212;
+  --text-color: #ffffff;
+  --muted-color: #bbbbbb;
+  --card-bg-color: #1e1e1e;
+  --hover-bg-color: #333;
+}
+
+/* GENERAL STYLES */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding: 0;
+}
+
+header {
+  background-color: #1f1f1f;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s;
+}
+
+nav a:hover {
+  background-color: var(--hover-bg-color);
+  border-radius: 8px;
+}
+
+.hero {
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero h2 {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--muted-color);
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: auto;
+}
+
+.tool-card {
+  background: var(--card-bg-color);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: transform 0.2s ease;
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.tool-card:hover {
+  transform: translateY(-5px);
+}
+
+.tool-card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.tool-card p {
+  font-size: 0.95rem;
+  color: #aaaaaa;
+}
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: #777;
+  font-size: 0.9rem;
+  padding: 1rem;
+  background-color: #1f1f1f;
+}
+
+/* MOBILE NAV MENU */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.menu-toggle div {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 4px 0;
+}
+
+@media (max-width: 768px) {
+  nav {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    background-color: #1f1f1f;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  nav.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+.search-container {
+  text-align: center;
+  padding: 1rem;
+}
+
+.search-container input {
+  background-color: #1e1e1e;
+  color: var(--text-color);
+  border: 1px solid var(--primary-color);
+  font-size: 1rem;
+  width: 90%;
+  max-width: 600px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotate PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"], select {
+      margin: 0.5rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    a.download-link {
+      display: block;
+      margin-top: 1rem;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Rotate PDF</h2>
+    <p>Rotate all pages of your PDF by 90, 180, or 270 degrees.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <br>
+    <label for="rotation">Rotation:</label>
+    <select id="rotation">
+      <option value="90">90°</option>
+      <option value="180">180°</option>
+      <option value="270">270°</option>
+    </select>
+    <br>
+    <button class="button" onclick="rotatePDF()">Rotate PDF</button>
+    <a id="downloadLink" class="download-link" style="display:none;" download="rotated.pdf">Download Rotated PDF</a>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function rotatePDF() {
+      const input = document.getElementById('pdfFile');
+      const rotation = parseInt(document.getElementById('rotation').value);
+      const link = document.getElementById('downloadLink');
+
+      if (!input.files.length) {
+        alert('Please select a PDF file.');
+        return;
+      }
+
+      const file = input.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+
+      pdfDoc.getPages().forEach(page => {
+        const currentRotation = page.getRotation().angle;
+        page.setRotation(PDFLib.degrees((currentRotation + rotation) % 360));
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      link.href = url;
+      link.style.display = 'inline-block';
+    }
+  </script>
+</body>
+</html>

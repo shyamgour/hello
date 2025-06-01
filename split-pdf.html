@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Split PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"], input[type="number"] {
+      margin: 0.5rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .download-links a {
+      display: block;
+      margin-top: 1rem;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Split PDF</h2>
+    <p>Select a PDF and split it into individual pages or specify a page range.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf" />
+    <br>
+    <button class="button" onclick="splitPDF()">Split PDF</button>
+    <div class="download-links" id="output"></div>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function splitPDF() {
+      const fileInput = document.getElementById('pdfFile');
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+
+      if (!fileInput.files.length) {
+        alert('Please select a PDF file.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+
+      for (let i = 0; i < pdfDoc.getPageCount(); i++) {
+        const newPdf = await PDFLib.PDFDocument.create();
+        const [copiedPage] = await newPdf.copyPages(pdfDoc, [i]);
+        newPdf.addPage(copiedPage);
+
+        const newPdfBytes = await newPdf.save();
+        const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `page-${i + 1}.pdf`;
+        a.textContent = `Download Page ${i + 1}`;
+        output.appendChild(a);
+      }
+    }
+  </script>
+</body>
+</html>

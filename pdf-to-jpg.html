@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF to JPG - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    canvas {
+      margin-top: 1rem;
+      display: block;
+      max-width: 100%;
+    }
+    a.download-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>PDF to JPG</h2>
+    <p>Convert the first page of your PDF into a JPG image (in-browser).</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfUpload" accept="application/pdf">
+    <br>
+    <button class="button" onclick="convertToJPG()">Convert to JPG</button>
+    <div id="output"></div>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function convertToJPG() {
+      const fileInput = document.getElementById('pdfUpload');
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+
+      if (!fileInput.files.length) {
+        alert('Please select a PDF file.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = async function() {
+        const typedarray = new Uint8Array(this.result);
+
+        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 2 });
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        const imgURL = canvas.toDataURL('image/jpeg');
+        const img = new Image();
+        img.src = imgURL;
+        output.appendChild(img);
+
+        const link = document.createElement('a');
+        link.href = imgURL;
+        link.download = 'page1.jpg';
+        link.className = 'download-link';
+        link.textContent = 'Download JPG';
+        output.appendChild(link);
+      };
+
+      fileReader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Page Numbers - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .download-link {
+      display: block;
+      margin-top: 1rem;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Add Page Numbers</h2>
+    <p>Insert numbered footers to your PDF pages in one click.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <br>
+    <button class="button" onclick="addPageNumbers()">Add Page Numbers</button>
+    <a id="downloadLink" class="download-link" style="display:none;" download="paged.pdf">Download Numbered PDF</a>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function addPageNumbers() {
+      const input = document.getElementById('pdfFile');
+      const link = document.getElementById('downloadLink');
+
+      if (!input.files.length) {
+        alert('Please select a PDF file.');
+        return;
+      }
+
+      const buffer = await input.files[0].arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(buffer);
+      const pages = pdfDoc.getPages();
+
+      for (let i = 0; i < pages.length; i++) {
+        const page = pages[i];
+        const { width, height } = page.getSize();
+        page.drawText(`Page ${i + 1}`, {
+          x: width / 2 - 30,
+          y: 20,
+          size: 12,
+          color: PDFLib.rgb(0, 0.9, 0.5),
+        });
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.style.display = 'inline-block';
+    }
+  </script>
+</body>
+</html>

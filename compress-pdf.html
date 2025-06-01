@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compress PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    a.download {
+      display: block;
+      margin-top: 1rem;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Compress PDF</h2>
+    <p>This tool removes metadata and streamlines your PDF. No quality degradation.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <br>
+    <button class="button" onclick="compressPDF()">Compress PDF</button>
+    <a id="downloadLink" class="download" style="display:none;" download="compressed.pdf">Download Compressed PDF</a>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function compressPDF() {
+      const fileInput = document.getElementById('pdfFile');
+      const downloadLink = document.getElementById('downloadLink');
+      if (!fileInput.files.length) return alert('Please upload a PDF file.');
+
+      const file = fileInput.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+      const compressedPdf = await PDFLib.PDFDocument.create();
+
+      const pages = await compressedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+      pages.forEach(page => compressedPdf.addPage(page));
+
+      const compressedBytes = await compressedPdf.save();
+      const blob = new Blob([compressedBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      downloadLink.href = url;
+      downloadLink.style.display = 'inline-block';
+    }
+  </script>
+</body>
+</html>

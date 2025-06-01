@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .preview {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    canvas {
+      border: 1px solid #333;
+      max-width: 100%;
+      width: 100%;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Compare PDF</h2>
+    <p>Display the first page of two PDFs side by side to visually compare changes.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfA" accept="application/pdf">
+    <input type="file" id="pdfB" accept="application/pdf">
+    <br>
+    <button class="button" onclick="comparePDFs()">Compare</button>
+    <div class="preview">
+      <canvas id="canvasA"></canvas>
+      <canvas id="canvasB"></canvas>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function renderPage(pdfBuffer, canvasId) {
+      const pdf = await pdfjsLib.getDocument({ data: pdfBuffer }).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1.5 });
+      const canvas = document.getElementById(canvasId);
+      const context = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: context, viewport }).promise;
+    }
+
+    async function comparePDFs() {
+      const inputA = document.getElementById('pdfA');
+      const inputB = document.getElementById('pdfB');
+
+      if (!inputA.files.length || !inputB.files.length) {
+        alert('Please select two PDF files to compare.');
+        return;
+      }
+
+      const bufferA = await inputA.files[0].arrayBuffer();
+      const bufferB = await inputB.files[0].arrayBuffer();
+
+      await renderPage(bufferA, 'canvasA');
+      await renderPage(bufferB, 'canvasB');
+    }
+  </script>
+</body>
+</html>

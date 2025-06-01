@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #444;
+      margin-top: 1rem;
+      display: block;
+      max-width: 100%;
+    }
+    input[type="file"], input[type="text"] {
+      margin: 0.5rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Edit PDF</h2>
+    <p>Add text to the first page of a PDF file (preview only).</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfUpload" accept="application/pdf">
+    <br>
+    <input type="text" id="textInput" placeholder="Enter text to add">
+    <br>
+    <button class="button" onclick="renderAndAnnotate()">Render & Annotate</button>
+    <canvas id="pdfCanvas"></canvas>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function renderAndAnnotate() {
+      const fileInput = document.getElementById('pdfUpload');
+      const canvas = document.getElementById('pdfCanvas');
+      const ctx = canvas.getContext('2d');
+      const text = document.getElementById('textInput').value;
+
+      if (!fileInput.files.length || !text) {
+        alert('Please upload a PDF and enter some text.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const fileReader = new FileReader();
+
+      fileReader.onload = async function () {
+        const typedarray = new Uint8Array(this.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 1.5 });
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+
+        await page.render(renderContext).promise;
+
+        // Draw text overlay
+        ctx.fillStyle = '#00e676';
+        ctx.font = '20px Inter';
+        ctx.fillText(text, 50, 50); // (x, y) position
+      };
+
+      fileReader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>

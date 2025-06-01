@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redact PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #444;
+      margin-top: 1rem;
+      max-width: 100%;
+    }
+    input[type="file"], input[type="text"] {
+      margin: 0.5rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Redact PDF</h2>
+    <p>Manually redact sensitive text by drawing black boxes on the PDF preview.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf" />
+    <button class="button" onclick="loadPDF()">Load PDF</button>
+    <canvas id="pdfCanvas"></canvas>
+    <p style="margin-top:1rem;">Draw over areas you want to redact (black out)</p>
+    <button class="button" onclick="downloadRedacted()">Download Redacted PDF</button>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    let canvas = document.getElementById("pdfCanvas");
+    let ctx = canvas.getContext("2d");
+    let imgData;
+    let isDrawing = false;
+
+    canvas.addEventListener("mousedown", e => {
+      isDrawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    canvas.addEventListener("mousemove", e => {
+      if (!isDrawing) return;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 20;
+      ctx.stroke();
+    });
+
+    canvas.addEventListener("mouseup", () => {
+      isDrawing = false;
+    });
+
+    async function loadPDF() {
+      const fileInput = document.getElementById("pdfFile");
+      if (!fileInput.files.length) return alert("Select a PDF file first.");
+
+      const arrayBuffer = await fileInput.files[0].arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 2 });
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      imgData = canvas.toDataURL("image/jpeg");
+    }
+
+    async function downloadRedacted() {
+      const pdfDoc = await PDFLib.PDFDocument.create();
+      const jpg = await pdfDoc.embedJpg(canvas.toDataURL("image/jpeg"));
+      const page = pdfDoc.addPage([jpg.width, jpg.height]);
+      page.drawImage(jpg, { x: 0, y: 0, width: jpg.width, height: jpg.height });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "redacted.pdf";
+      link.click();
+    }
+  </script>
+</body>
+</html>

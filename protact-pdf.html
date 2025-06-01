@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protect PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"], input[type="password"] {
+      margin: 0.5rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .download-link {
+      display: block;
+      margin-top: 1rem;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Protect PDF</h2>
+    <p>Add a password to restrict opening your PDF.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <br>
+    <input type="password" id="password" placeholder="Enter password">
+    <br>
+    <button class="button" onclick="protectPDF()">Protect PDF</button>
+    <a id="downloadLink" class="download-link" style="display:none;" download="protected.pdf">Download Protected PDF</a>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function protectPDF() {
+      const fileInput = document.getElementById('pdfFile');
+      const password = document.getElementById('password').value;
+      const link = document.getElementById('downloadLink');
+
+      if (!fileInput.files.length || !password) {
+        alert('Please select a PDF and enter a password.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+      const pdfBytes = await pdfDoc.save({
+        passwords: {
+          ownerPassword: password,
+          userPassword: password,
+        },
+        useObjectStreams: false
+      });
+
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      link.href = url;
+      link.style.display = 'inline-block';
+    }
+  </script>
+</body>
+</html>

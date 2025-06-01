@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlock PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .note {
+      margin: 1rem 0;
+      color: #bbbbbb;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Unlock PDF</h2>
+    <p>Remove basic restrictions from your PDF file.</p>
+  </section>
+
+  <div class="container">
+    <p class="note">Note: This tool removes only non-encrypted restrictions (e.g., copying/printing). It cannot remove passwords from encrypted PDFs.</p>
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <br>
+    <button class="button" onclick="unlockPDF()">Unlock PDF</button>
+    <a id="downloadLink" class="button" style="display:none; margin-top: 1rem;" download="unlocked.pdf">Download Unlocked PDF</a>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    async function unlockPDF() {
+      const input = document.getElementById('pdfFile');
+      const link = document.getElementById('downloadLink');
+
+      if (!input.files.length) {
+        alert('Please select a PDF file.');
+        return;
+      }
+
+      const file = input.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      try {
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.style.display = 'inline-block';
+      } catch (error) {
+        alert('Failed to unlock this PDF. It may be password-encrypted.');
+      }
+    }
+  </script>
+</body>
+</html>

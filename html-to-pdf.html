@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML to PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+  <style>
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #2a2a2a;
+      color: #eee;
+      border-radius: 8px;
+      border: 1px solid #444;
+      font-family: monospace;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>HTML to PDF</h2>
+    <p>Paste your HTML code below and convert it to a PDF file.</p>
+  </section>
+
+  <div class="container">
+    <textarea id="htmlInput" placeholder="Paste your HTML code here..."></textarea>
+    <br>
+    <button class="button" onclick="convertToPDF()">Convert to PDF</button>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    function convertToPDF() {
+      const htmlContent = document.getElementById('htmlInput').value;
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlContent;
+      document.body.appendChild(tempDiv);
+
+      html2pdf()
+        .set({ margin: 0.5, filename: 'converted.pdf', html2canvas: { scale: 2 } })
+        .from(tempDiv)
+        .save()
+        .then(() => tempDiv.remove());
+    }
+  </script>
+</body>
+</html>

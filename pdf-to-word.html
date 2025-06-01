@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF to Word - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .note {
+      color: #bbbbbb;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>PDF to Word</h2>
+    <p>Convert your PDF file to an editable DOCX Word document.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" accept="application/pdf" />
+    <br />
+    <button class="button" onclick="alert('Client-side PDF to Word is not yet supported. Please use server-based solutions or upload for conversion.')">Convert</button>
+    <p class="note">Note: Due to browser limitations, accurate PDF to Word conversion requires server-side processing or APIs.</p>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 CheapTools.shop — All rights reserved.</p>
+  </footer>
+</body>
+</html>

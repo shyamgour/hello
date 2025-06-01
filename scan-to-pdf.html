@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scan to PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    video, canvas {
+      max-width: 100%;
+      margin-top: 1rem;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .download-link {
+      display: block;
+      margin-top: 1rem;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Scan to PDF</h2>
+    <p>Capture a photo from your camera and convert it into a PDF.</p>
+  </section>
+
+  <div class="container">
+    <video id="video" autoplay playsinline width="100%"></video>
+    <br />
+    <button class="button" onclick="captureImage()">Capture & Convert</button>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <a id="downloadLink" class="download-link" style="display:none;" download="scan.pdf">Download PDF</a>
+  </div>
+
+  <footer>
+    &copy; 2025 CheapTools.shop — All rights reserved.
+  </footer>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const link = document.getElementById('downloadLink');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((err) => {
+        alert('Camera access is required to use this tool.');
+        console.error(err);
+      });
+
+    async function captureImage() {
+      canvas.style.display = 'block';
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      const dataUrl = canvas.toDataURL('image/jpeg');
+      const pdfDoc = await PDFLib.PDFDocument.create();
+      const jpgImage = await pdfDoc.embedJpg(dataUrl);
+      const page = pdfDoc.addPage([jpgImage.width, jpgImage.height]);
+      page.drawImage(jpgImage, { x: 0, y: 0, width: jpgImage.width, height: jpgImage.height });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      link.href = url;
+      link.style.display = 'inline-block';
+    }
+  </script>
+</body>
+</html>

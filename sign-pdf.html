@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    canvas {
+      margin-top: 1rem;
+      border: 1px solid #444;
+      max-width: 100%;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+    .note {
+      color: #bbbbbb;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CheapTools.shop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Sign PDF</h2>
+    <p>Draw your signature and apply it to the first page of a PDF file.</p>
+  </section>
+
+  <div class="container">
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <br>
+    <canvas id="signCanvas" width="300" height="150" style="background:#fff; border-radius: 8px;"></canvas>
+    <p>Draw your signature above</p>
+    <button class="button" onclick="clearSignature()">Clear</button>
+    <br><br>
+    <button class="button" onclick="signPDF()">Sign PDF</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 CheapTools.shop — All rights reserved.</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('signCanvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#000';
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function signPDF() {
+      const input = document.getElementById('pdfFile');
+      if (!input.files.length) return alert('Upload a PDF file first.');
+
+      const pdfBytes = await input.files[0].arrayBuffer();
+      const signatureImage = canvas.toDataURL();
+
+      const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+      const pages = pdfDoc.getPages();
+      const page = pages[0];
+      const pngImg = await pdfDoc.embedPng(signatureImage);
+
+      page.drawImage(pngImg, {
+        x: 50,
+        y: 50,
+        width: 150,
+        height: 75
+      });
+
+      const newBytes = await pdfDoc.save();
+      const blob = new Blob([newBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'signed.pdf';
+      link.click();
+    }
+  </script>
+</body>
+</html>

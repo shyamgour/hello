@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organize PDF - CheapTools.shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .pages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+    .pages canvas {
+      border: 1px solid #444;
+      cursor: move;
+      max-width: 100px;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    .button {
+      background-color: #00e676;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #00c665;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>CheapTools.shop</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h2>Organize PDF</h2>
+  <p>Reorder PDF pages by dragging thumbnails, then download the updated file.</p>
+</section>
+
+<div class="container">
+  <input type="file" id="pdfFile" accept="application/pdf">
+  <div class="pages" id="previewPages"></div>
+  <button class="button" onclick="downloadOrganizedPDF()">Download Organized PDF</button>
+</div>
+
+<footer>
+  <p>&copy; 2025 CheapTools.shop — All rights reserved.</p>
+</footer>
+
+<script>
+  let loadedPages = [];
+  let originalPdfBytes;
+
+  document.getElementById('pdfFile').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    originalPdfBytes = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: originalPdfBytes }).promise;
+
+    const previewDiv = document.getElementById('previewPages');
+    previewDiv.innerHTML = '';
+    loadedPages = [];
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 0.5 });
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: context, viewport }).promise;
+      canvas.setAttribute('data-index', i - 1);
+      canvas.draggable = true;
+      canvas.ondragstart = e => e.dataTransfer.setData('index', e.target.dataset.index);
+      canvas.ondragover = e => e.preventDefault();
+      canvas.ondrop = e => {
+        e.preventDefault();
+        const src = e.dataTransfer.getData('index');
+        const dst = e.target.dataset.index;
+        if (src === dst) return;
+        const children = [...previewDiv.children];
+        previewDiv.insertBefore(children[src], children[dst]);
+        updateDataIndices();
+      };
+      loadedPages.push(canvas);
+      previewDiv.appendChild(canvas);
+    }
+  });
+
+  function updateDataIndices() {
+    const canvases = document.querySelectorAll('#previewPages canvas');
+    canvases.forEach((canvas, index) => canvas.dataset.index = index);
+  }
+
+  async function downloadOrganizedPDF() {
+    if (!originalPdfBytes) return;
+
+    const pdfSrc = await PDFLib.PDFDocument.load(originalPdfBytes);
+    const pdfNew = await PDFLib.PDFDocument.create();
+    const pages = await pdfSrc.copyPages(pdfSrc, [...Array(pdfSrc.getPageCount()).keys()]);
+
+    const order = Array.from(document.querySelectorAll('#previewPages canvas')).map(c => parseInt(c.dataset.index));
+    order.forEach(i => pdfNew.addPage(pages[i]));
+
+    const bytes = await pdfNew.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'organized.pdf';
+    a.click();
+  }
+</script>
+</body>
+</html>
